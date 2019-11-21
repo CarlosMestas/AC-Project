@@ -20,7 +20,8 @@ public class MessageSender extends AsyncTask<String,Void,Void> {
         // CMD ipconfig
         // IPv4 Address
         try{
-            s = new Socket("192.168.0.11",7800);
+            String localIP = "172.20.10.6";
+            s = new Socket(localIP,7800);
             pw = new PrintWriter(s.getOutputStream());
             pw.write(message);
             pw.flush();
