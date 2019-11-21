@@ -41,5 +41,17 @@
             android:onClick="send"
             android:padding="15dp"
             android:text="Button" />
+
+        <Button
+            android:id="@+id/buttonSync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sincronizar" />
+
+        <Button
+            android:id="@+id/buttonSync2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sincronizar 2" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

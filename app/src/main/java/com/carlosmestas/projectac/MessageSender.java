@@ -1,6 +1,8 @@
 package com.carlosmestas.projectac;
 
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,9 +11,15 @@ import java.net.Socket;
 
 public class MessageSender extends AsyncTask<String,Void,Void> {
 
+    String ipPCv4;
     Socket s;
     DataOutputStream dos;
     PrintWriter pw;
+
+
+    public MessageSender(String ipPCv4){
+        this.ipPCv4 = ipPCv4;
+    }
 
     protected Void doInBackground(String... voids) {
 
@@ -20,7 +28,8 @@ public class MessageSender extends AsyncTask<String,Void,Void> {
         // CMD ipconfig
         // IPv4 Address
         try{
-            String localIP = "172.20.10.6";
+            Log.d("ga",ipPCv4);
+            String localIP = ipPCv4;
             s = new Socket(localIP,7800);
             pw = new PrintWriter(s.getOutputStream());
             pw.write(message);
