@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -53,12 +54,19 @@ public class MainActivity extends AppCompatActivity{
     Button buttonSync;
     Button buttonSync2;
 
+    Button buttonUp, buttonDown, buttonLeft, buttonRight;
+
     public String ipPCv4 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        buttonUp = findViewById(R.id.buttonU);
+        buttonDown = findViewById(R.id.buttonD);
+        buttonLeft = findViewById(R.id.buttonL);
+        buttonRight = findViewById(R.id.buttonR);
 
 
 
@@ -112,25 +120,16 @@ public class MainActivity extends AppCompatActivity{
 
                 Intent i = new Intent(MainActivity.this, QrCodeActivity.class);
                 startActivityForResult(i, REQUEST_CODE_QR_SCAN);
-                /*
-                mScannerView = new ZXingScannerView(getApplicationContext());
-                setContentView(mScannerView);
-                mScannerView.setResultHandler();
-                */
+
             }
         });
 
         buttonSync2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),getLocalIpAddress(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),getLocalIpAddress() + obtenerNombreDeDispositivo(),Toast.LENGTH_SHORT).show();
                 MessageSender messageSender = new MessageSender(ipPCv4);
-                messageSender.execute(getLocalIpAddress());
-
-                /*
-                WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
-                String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-                */
+                messageSender.execute(getLocalIpAddress() + " " +obtenerNombreDeDispositivo());
 
             }
         });
@@ -252,4 +251,26 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
+    public String obtenerNombreDeDispositivo() {
+        String fabricante = Build.MANUFACTURER;
+        String modelo = Build.MODEL;
+        if (modelo.startsWith(fabricante)) {
+            return primeraLetraMayuscula(modelo);
+        } else {
+            return primeraLetraMayuscula(fabricante) + " " + modelo;
+        }
+    }
+
+
+    private String primeraLetraMayuscula(String cadena) {
+        if (cadena == null || cadena.length() == 0) {
+            return "";
+        }
+        char primeraLetra = cadena.charAt(0);
+        if (Character.isUpperCase(primeraLetra)) {
+            return cadena;
+        } else {
+            return Character.toUpperCase(primeraLetra) + cadena.substring(1);
+        }
+    }
 }
