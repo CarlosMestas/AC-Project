@@ -2,25 +2,26 @@ package com.carlosmestas.projectac;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class MessageSender extends AsyncTask<String,Void,Void> {
+public class MessageSender2 extends AsyncTask<String,Void,Void> {
 
     String ipPCv4;
     String numPlayer;
+
     Socket s;
     DataOutputStream dos;
     PrintWriter pw;
 
 
-    public MessageSender(String ipPCv4){
+    public MessageSender2(String ipPCv4,String numPlayer){
 
         this.ipPCv4 = ipPCv4;
+        this.numPlayer = numPlayer;
     }
 
     protected Void doInBackground(String... voids) {

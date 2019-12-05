@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity{
     private static final int REQUEST_CODE_QR_SCAN = 101;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 102;
 
+    String numPlayer = "";
     EditText editTextTest;
     ImageButton imageButtonMic;
     Button buttonSync;
@@ -159,6 +160,13 @@ public class MainActivity extends AppCompatActivity{
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                            if(message.equals("Jugador 1 Conectado")){
+                                numPlayer = "Jugador 1";
+                            }
+                            if(message.equals("Jugador 2 Conectado")){
+                                numPlayer = "Jugador 2";
+                            }
+
                         }
                     });
 
@@ -171,8 +179,8 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void send(View v){
-        MessageSender messageSender = new MessageSender(ipPCv4);
-        messageSender.execute(editTextTest.getText().toString());
+        MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+        messageSender.execute(numPlayer + " movio " + editTextTest.getText().toString());
     }
 
     private void startListening() {
