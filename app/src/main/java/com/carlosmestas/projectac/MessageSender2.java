@@ -1,6 +1,7 @@
 package com.carlosmestas.projectac;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.DataOutputStream;
@@ -28,8 +29,7 @@ public class MessageSender2 extends AsyncTask<String,Void,Void> {
 
         String message = voids[0];
 
-        // CMD ipconfig
-        // IPv4 Address
+
         try{
             Log.d("ga",ipPCv4);
             String localIP = ipPCv4;
@@ -45,5 +45,28 @@ public class MessageSender2 extends AsyncTask<String,Void,Void> {
         }
 
         return null;
+    }
+
+    public String obtenerNombreDeDispositivo() {
+        String fabricante = Build.MANUFACTURER;
+        String modelo = Build.MODEL;
+        if (modelo.startsWith(fabricante)) {
+            return primeraLetraMayuscula(modelo);
+        } else {
+            return primeraLetraMayuscula(fabricante) + " " + modelo;
+        }
+    }
+
+
+    private String primeraLetraMayuscula(String cadena) {
+        if (cadena == null || cadena.length() == 0) {
+            return "";
+        }
+        char primeraLetra = cadena.charAt(0);
+        if (Character.isUpperCase(primeraLetra)) {
+            return cadena;
+        } else {
+            return Character.toUpperCase(primeraLetra) + cadena.substring(1);
+        }
     }
 }
