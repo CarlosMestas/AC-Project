@@ -42,20 +42,36 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Locale;
 
+/**
+ * Actividad principal donde se iniciara la aplicacion
+ * Realizaremos las conexiones
+ */
 public class MainActivity extends AppCompatActivity{
 
+    // Diferentes tipos de codigos para realizar las diferentes conexiones
+    // De acerdo a cada tipo de conexion que haremos
+    // Codigo para grabar audio
     private static final int REC_CODE_INPUT = 100;
+    // Codigo para escanear el codigo QR
     private static final int REQUEST_CODE_QR_SCAN = 101;
+    // Codigo para solicitar permiso al usuario de que la aplicacion va a utilizar la camara
+    // Esto es importante ya que en algunos celulares al no solicitar el uso de camara
+    // n=va a fallar el lector de codigo qr, ya que la camara no va a funcionar
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 102;
 
+    // Almacenaremos en un string el numero de jugador
     String numPlayer = "";
+    // Edit text de prueba donde mandamos diferentes tipos de datos
     EditText editTextTest;
+    // Boton con imagen
     ImageButton imageButtonMic;
+    // Boton donde realizaremos la primera parte de la sincronizacion
     Button buttonSync;
+    // Boton donde realizaremos la segunda parte de la sincronizacion
     Button buttonSync2;
 
-    Button buttonUp, buttonDown, buttonLeft, buttonRight;
-
+    // Almacenaremos la direccion IP que enviamos desde la computadora, para que de esta manera
+    // podamos enviar los mensajes a la computadora
     public String ipPCv4 = "";
 
     @Override
@@ -63,20 +79,13 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonUp = findViewById(R.id.buttonU);
-        buttonDown = findViewById(R.id.buttonD);
-        buttonLeft = findViewById(R.id.buttonL);
-        buttonRight = findViewById(R.id.buttonR);
-
-
-
-        // Here, thisActivity is the current activity
+        // Se realiza la respectiva solicitud al usuario de que la aplicacion utilizara la camara
+        // Luego de que el usuario acepta este permiso, no se le vuelve a solicitar, salvo que la
+        // aplicacion se vuelva a instalar
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
                     Manifest.permission.CAMERA)) {
                 // Show an explanation to the user *asynchronously* -- don't block
@@ -97,15 +106,17 @@ public class MainActivity extends AppCompatActivity{
             // Permission has already been granted
         }
 
+        // Realizamos la respectiva seleccion de nuestros objetivos de los respectivos layouts
         editTextTest = findViewById(R.id.editTextTest);
         imageButtonMic = findViewById(R.id.imageButton);
         buttonSync = findViewById(R.id.buttonSync);
         buttonSync2 = findViewById(R.id.buttonSync2);
 
-
+        // Programacion del boton de el boton de grabacion
         imageButtonMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Inicia el metodo para comenzar la grabacion
                 startListening();
             }
 
@@ -114,27 +125,33 @@ public class MainActivity extends AppCompatActivity{
         Thread myThread = new Thread(new MyServerThread());
         myThread.start();
 
+        // Primera parte de la conexion
+        // En este paso procederemos a leer el codigo QR ya generado por la computadora
         buttonSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                // Inicia la actividad de leer el codigo QR
                 Intent i = new Intent(MainActivity.this, QrCodeActivity.class);
                 startActivityForResult(i, REQUEST_CODE_QR_SCAN);
 
             }
         });
 
+        // Ya teniendo la direccion IP, podemos nosotros enviar la direccion IP de cada celular, asi como el modelo
         buttonSync2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),getLocalIpAddress() + obtenerNombreDeDispositivo(),Toast.LENGTH_SHORT).show();
                 MessageSender messageSender = new MessageSender(ipPCv4);
                 messageSender.execute(getLocalIpAddress() + " " +obtenerNombreDeDispositivo());
-
             }
         });
     }
 
+    /**
+     * Metodo donde vamos a recibir los mensajes de la compputadora
+     */
     class MyServerThread implements Runnable{
 
         Socket s;
@@ -159,13 +176,21 @@ public class MainActivity extends AppCompatActivity{
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                            // La computadora envia un distinto mensaje de acuerdo a las dos direcciones que se almacenaron
+                            // En los diferentes casos se almacenan en cada celular el numero de jugador
                             if(message.equals("Jugador 1 Conectado")){
                                 numPlayer = "Jugador 1";
                             }
                             if(message.equals("Jugador 2 Conectado")){
                                 numPlayer = "Jugador 2";
                             }
-
+                            // Se recibe el mensaje cuando en la computadora se selcciona que vamos a jugar el tres en raya
+                            if(message.equals("3eR")){
+                                Intent i = new Intent(MainActivity.this , MainActivity2.class);
+                                i.putExtra("ipPCv4",ipPCv4);
+                                i.putExtra("jugador",numPlayer);
+                                startActivity(i);
+                            }
                         }
                     });
 
@@ -177,19 +202,29 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Metodo donde vamos a enviar al informacion de cada movimiento
+     * @param v Vista donde estamos trabajando
+     */
     public void send(View v){
+        // La primera parte del mensaje es la direccion IP de la computadora
+        // La segunda parte del mensaje es el numero de jugador, donde se envia el movimiento respectivo
+        // de cada jugador
         MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
         messageSender.execute(numPlayer + " movio " + editTextTest.getText().toString());
     }
 
+    /**
+     * Metodo donde comienza la grabacion de audio, para la posicion de ataque
+     */
     private void startListening() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        // Cambiamos un pequeño mensaje
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Dime la posición de ataque");
         try{
             startActivityForResult(intent,REC_CODE_INPUT);
-
         }
         catch(ActivityNotFoundException e){
 
@@ -198,8 +233,10 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        // Lectura del codigo QR
         if (resultCode != Activity.RESULT_OK) {
             Toast.makeText(getApplicationContext(), "No se pudo obtener una respuesta", Toast.LENGTH_SHORT).show();
             String resultado = data.getStringExtra("com.blikoon.qrcodescanner.error_decoding_image");
@@ -217,6 +254,7 @@ public class MainActivity extends AppCompatActivity{
             }
         }
 
+        // Grabacion de audio
         switch(requestCode){
             case REC_CODE_INPUT:{
                 if(resultCode == RESULT_OK && null != data){
@@ -225,6 +263,7 @@ public class MainActivity extends AppCompatActivity{
                     for(int i = 0 ; i < result.size() ; i++){
                         s += result.get(i);
                     }
+                    // El audio grabado pasa a texto y se escribe el respectivo editText
                     editTextTest.setText(result.get(0));
 
                 }
@@ -233,6 +272,10 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    /**
+     * Metodo donde podemos obtener la direccion Ip de cada respectivo celular
+     * @return direccion IP del celular
+     */
     public static String getLocalIpAddress() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
@@ -250,7 +293,10 @@ public class MainActivity extends AppCompatActivity{
         return null;
     }
 
-
+    /**
+     * Obtenemos el modelo del dispoditivo
+     * @return Modelo del dispositivo
+     */
     public String obtenerNombreDeDispositivo() {
         String fabricante = Build.MANUFACTURER;
         String modelo = Build.MODEL;
