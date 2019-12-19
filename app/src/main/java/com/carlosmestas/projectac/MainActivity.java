@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        MediaPlayer mp = MediaPlayer.create(MainActivity.this, R.raw.ca);
+        mp.pause();
         // Se realiza la respectiva solicitud al usuario de que la aplicacion utilizara la camara
         // Luego de que el usuario acepta este permiso, no se le vuelve a solicitar, salvo que la
         // aplicacion se vuelva a instalar

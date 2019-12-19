@@ -46,9 +46,9 @@ public class MainActivity2 extends AppCompatActivity{
 
     public String ipPCv4 = "";
 
-    Button buttonA0, buttonA1, buttonA2;
-    Button buttonB0, buttonB1, buttonB2;
-    Button buttonC0, buttonC1, buttonC2;
+    ImageButton buttonA0, buttonA1, buttonA2;
+    ImageButton buttonB0, buttonB1, buttonB2;
+    ImageButton buttonC0, buttonC1, buttonC2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +65,17 @@ public class MainActivity2 extends AppCompatActivity{
         String np = intent.getStringExtra("jugador");
 
         // Mensaje donde mostramos la direccion IP de la computadora, asi como el numero de jugador respectivo
-        Toast.makeText(getApplicationContext(),ip + " - " + np, Toast.LENGTH_LONG).show();
+      //  Toast.makeText(getApplicationContext(),ip + " - " + np, Toast.LENGTH_LONG).show();
 
         int img = 0;
         // Seleccionaremos la respectiva imagen de acuerdo al numero de jugador que es
         if(np == "Jugador 1"){
             img = R.drawable.x;
+            Toast.makeText(MainActivity2.this,img, Toast.LENGTH_LONG).show();
         }
         else if(np == "Jugador 2"){
             img = R.drawable.o;
+            Toast.makeText(MainActivity2.this,img, Toast.LENGTH_LONG).show();
         }
         // Creacion de nuestro objeto jugador y le asignamos su respectiva imagen para marcar
         final Jugador jugador = new Jugador(np,img);
@@ -82,15 +84,17 @@ public class MainActivity2 extends AppCompatActivity{
         imageButtonMic = findViewById(R.id.imageButton2);
         editTextTest = findViewById(R.id.editTextTest2);
 
-        buttonA0 = findViewById(R.id.buttonA0);
+        buttonA0 = findViewById(R.id.imageButton3);
         buttonA0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonA0.setBackgroundResource(jugador.getImagen());
+                buttonA0.setImageResource(R.drawable.o);
+        //        buttonA0.setBackgroundResource(jugador.getImagen());
+
             }
         });
 
-        buttonA1 = findViewById(R.id.buttonA1);
+        buttonA1 = findViewById(R.id.imageButton4);
         buttonA1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +103,7 @@ public class MainActivity2 extends AppCompatActivity{
             }
         });
 
-        buttonA2 = findViewById(R.id.buttonA2);
+        buttonA2 = findViewById(R.id.imageButton5);
         buttonA2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +112,7 @@ public class MainActivity2 extends AppCompatActivity{
             }
         });
 
-        buttonB0 = findViewById(R.id.buttonB0);
+        buttonB0 = findViewById(R.id.imageButton6);
         buttonB0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +121,7 @@ public class MainActivity2 extends AppCompatActivity{
             }
         });
 
-        buttonB1 = findViewById(R.id.buttonB1);
+        buttonB1 = findViewById(R.id.imageButton7);
         buttonB1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +129,7 @@ public class MainActivity2 extends AppCompatActivity{
             }
         });
 
-        buttonB2 = findViewById(R.id.buttonB2);
+        buttonB2 = findViewById(R.id.imageButton8);
         buttonB2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +139,7 @@ public class MainActivity2 extends AppCompatActivity{
         });
 
 
-        buttonC0 = findViewById(R.id.buttonC0);
+        buttonC0 = findViewById(R.id.imageButton9);
         buttonC0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +148,7 @@ public class MainActivity2 extends AppCompatActivity{
             }
         });
 
-        buttonC1 = findViewById(R.id.buttonC1);
+        buttonC1 = findViewById(R.id.imageButton10);
         buttonC1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +157,7 @@ public class MainActivity2 extends AppCompatActivity{
             }
         });
 
-        buttonC2 = findViewById(R.id.buttonC2);
+        buttonC2 = findViewById(R.id.imageButton11);
         buttonC2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,5 +263,14 @@ public class MainActivity2 extends AppCompatActivity{
         }
 
     }
+
+    public void send(View v){
+        // La primera parte del mensaje es la direccion IP de la computadora
+        // La segunda parte del mensaje es el numero de jugador, donde se envia el movimiento respectivo
+        // de cada jugador
+        MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+        messageSender.execute(numPlayer + " movio " + editTextTest.getText().toString());
+    }
+
 
 }
