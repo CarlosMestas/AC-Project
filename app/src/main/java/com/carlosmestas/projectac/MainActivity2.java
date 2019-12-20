@@ -46,14 +46,22 @@ public class MainActivity2 extends AppCompatActivity{
 
     public String ipPCv4 = "";
 
+    String np;
+    int img;
+
     ImageButton buttonA0, buttonA1, buttonA2;
     ImageButton buttonB0, buttonB1, buttonB2;
     ImageButton buttonC0, buttonC1, buttonC2;
+
+    Jugador jugador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        Thread myThread = new Thread(new MainActivity2.MyServerThread());
+        myThread.start();
 
         // Intent de donde llegamos a esta actividad
         Intent intent = getIntent();
@@ -62,23 +70,23 @@ public class MainActivity2 extends AppCompatActivity{
         String ip = intent.getStringExtra("ipPCv4");
         ipPCv4 = ip;
         // Almacenamos el numero de jugador
-        String np = intent.getStringExtra("jugador");
+        np = intent.getStringExtra("jugador");
 
         // Mensaje donde mostramos la direccion IP de la computadora, asi como el numero de jugador respectivo
       //  Toast.makeText(getApplicationContext(),ip + " - " + np, Toast.LENGTH_LONG).show();
 
-        int img = 0;
+        img = 0;
         // Seleccionaremos la respectiva imagen de acuerdo al numero de jugador que es
-        if(np == "Jugador 1"){
+        if(np.equals("Jugador 1")){
             img = R.drawable.x;
             Toast.makeText(MainActivity2.this,img, Toast.LENGTH_LONG).show();
         }
-        else if(np == "Jugador 2"){
+        else if(np.equals("Jugador 2")){
             img = R.drawable.o;
             Toast.makeText(MainActivity2.this,img, Toast.LENGTH_LONG).show();
         }
         // Creacion de nuestro objeto jugador y le asignamos su respectiva imagen para marcar
-        final Jugador jugador = new Jugador(np,img);
+        jugador = new Jugador(np,img);
 
         // Se asignan los respectivos botones del layout
         imageButtonMic = findViewById(R.id.imageButton2);
@@ -88,7 +96,12 @@ public class MainActivity2 extends AppCompatActivity{
         buttonA0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonA0.setImageResource(R.drawable.o);
+                Toast.makeText(MainActivity2.this,R.drawable.o+" - "+jugador.getImagen()+" - "+np, Toast.LENGTH_LONG).show();
+
+                buttonA0.setImageResource(jugador.getImagen());
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "A0");
+                buttonA0.setEnabled(false);
         //        buttonA0.setBackgroundResource(jugador.getImagen());
 
             }
@@ -98,7 +111,10 @@ public class MainActivity2 extends AppCompatActivity{
         buttonA1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonA1.setBackgroundResource(jugador.getImagen());
+                buttonA1.setImageResource(jugador.getImagen());
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "A1");
+                buttonA1.setEnabled(false);
 
             }
         });
@@ -107,7 +123,11 @@ public class MainActivity2 extends AppCompatActivity{
         buttonA2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonA2.setBackgroundResource(jugador.getImagen());
+                buttonA2.setImageResource(jugador.getImagen());
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "A2");
+                buttonA2.setEnabled(false);
+
 
             }
         });
@@ -116,7 +136,10 @@ public class MainActivity2 extends AppCompatActivity{
         buttonB0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonB0.setBackgroundResource(jugador.getImagen());
+                buttonB0.setImageResource(jugador.getImagen());
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "B0");
+                buttonB0.setEnabled(false);
 
             }
         });
@@ -125,7 +148,12 @@ public class MainActivity2 extends AppCompatActivity{
         buttonB1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonB1.setBackgroundResource(jugador.getImagen());
+                buttonB1.setImageResource(jugador.getImagen());
+
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "B1");
+                buttonB1.setEnabled(false);
+
             }
         });
 
@@ -133,7 +161,11 @@ public class MainActivity2 extends AppCompatActivity{
         buttonB2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonB2.setBackgroundResource(jugador.getImagen());
+                buttonB2.setImageResource(jugador.getImagen());
+
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "B2");
+                buttonB2.setEnabled(false);
 
             }
         });
@@ -143,7 +175,11 @@ public class MainActivity2 extends AppCompatActivity{
         buttonC0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonC0.setBackgroundResource(jugador.getImagen());
+                buttonC0.setImageResource(jugador.getImagen());
+
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "C0");
+                buttonC0.setEnabled(false);
 
             }
         });
@@ -152,7 +188,11 @@ public class MainActivity2 extends AppCompatActivity{
         buttonC1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonC1.setBackgroundResource(jugador.getImagen());
+                buttonC1.setImageResource(jugador.getImagen());
+
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "C1");
+                buttonC1.setEnabled(false);
 
             }
         });
@@ -161,7 +201,12 @@ public class MainActivity2 extends AppCompatActivity{
         buttonC2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonC2.setBackgroundResource(jugador.getImagen());
+                buttonC2.setImageResource(jugador.getImagen());
+
+
+                MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
+                messageSender.execute(np + " marco " + "C2");
+                buttonC2.setEnabled(false);
 
             }
         });
@@ -175,8 +220,8 @@ public class MainActivity2 extends AppCompatActivity{
             }
         });
 
-        Thread myThread = new Thread(new MainActivity2.MyServerThread());
-        myThread.start();
+
+
 
 
     }
@@ -204,15 +249,80 @@ public class MainActivity2 extends AppCompatActivity{
                     h.post(new Runnable() {
                         @Override
                         public void run() {
-                            /*
-                            Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
-                            if(message.equals("Jugador 1 Conectado")){
-                                numPlayer = "Jugador 1";
+
+                            if(message.equals("Jugador 1 marco A0")){// || message.equals("Jugador 2 marco A0")){
+                             /*   if(jugador.getImagen() == R.drawable.o)
+                                    buttonA0.setImageResource(R.drawable.x);
+                                else
+                                    buttonA0.setImageResource(R.drawable.o);
+                             */ Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+
+                                buttonA0.setEnabled(false);
                             }
-                            if(message.equals("Jugador 2 Conectado")){
-                                numPlayer = "Jugador 2";
+                            if(message.equals("Jugador 2 marco A0")){ //|| message.equals("Jugador 2 marco A0")){
+                                if(jugador.getImagen() == R.drawable.o)
+                                    buttonA0.setImageResource(R.drawable.x);
+                                else
+                                    buttonA0.setImageResource(R.drawable.o);
+                                buttonA0.setEnabled(false);
                             }
-                            */
+                            else if(message.equals("Jugador 1 marco A1") || message.equals("Jugador 2 marco A1")){
+                                if(img == R.drawable.o)
+                                    buttonA1.setImageResource(R.drawable.x);
+                                else
+                                    buttonA1.setImageResource(R.drawable.o);
+                                buttonA1.setEnabled(false);
+                            }
+                            else if(message.equals("Jugador 1 marco A2") || message.equals("Jugador 2 marco A2")){
+                                if(img == R.drawable.o)
+                                    buttonA2.setImageResource(R.drawable.x);
+                                else
+                                    buttonA2.setImageResource(R.drawable.o);
+                                buttonA2.setEnabled(false);
+                            }
+                            else if(message.equals("Jugador 1 marco B0") || message.equals("Jugador 2 marco B0")){
+                                if(img == R.drawable.o)
+                                    buttonB0.setImageResource(R.drawable.x);
+                                else
+                                    buttonB0.setImageResource(R.drawable.o);
+                                buttonB0.setEnabled(false);
+                            }
+                            else if(message.equals("Jugador 1 marco B1") || message.equals("Jugador 2 marco B1")){
+                                if(img == R.drawable.o)
+                                    buttonB1.setImageResource(R.drawable.x);
+                                else
+                                    buttonB1.setImageResource(R.drawable.o);
+                                buttonB1.setEnabled(false);
+                            }
+                            else if(message.equals("Jugador 1 marco B2") || message.equals("Jugador 2 marco B2")){
+                                if(img == R.drawable.o)
+                                    buttonB2.setImageResource(R.drawable.x);
+                                else
+                                    buttonB2.setImageResource(R.drawable.o);
+                                buttonB2.setEnabled(false);
+                            }
+                            else if(message.equals("Jugador 1 marco C0") || message.equals("Jugador 2 marco C0")){
+                                if(img == R.drawable.o)
+                                    buttonC0.setImageResource(R.drawable.x);
+                                else
+                                    buttonC0.setImageResource(R.drawable.o);
+                                buttonC0.setEnabled(false);
+                            }
+                            else if(message.equals("Jugador 1 marco C1") || message.equals("Jugador 2 marco C1")){
+                                if(img == R.drawable.o)
+                                    buttonC1.setImageResource(R.drawable.x);
+                                else
+                                    buttonC1.setImageResource(R.drawable.o);
+                                buttonC1.setEnabled(false);
+                            }
+                            else if(message.equals("Jugador 1 marco C2") || message.equals("Jugador 2 marco C2")){
+                                if(img == R.drawable.o)
+                                    buttonC2.setImageResource(R.drawable.x);
+                                else
+                                    buttonC2.setImageResource(R.drawable.o);
+                                buttonC2.setEnabled(false);
+                            }
+
                         }
                     });
 
@@ -269,7 +379,7 @@ public class MainActivity2 extends AppCompatActivity{
         // La segunda parte del mensaje es el numero de jugador, donde se envia el movimiento respectivo
         // de cada jugador
         MessageSender2 messageSender = new MessageSender2(ipPCv4,numPlayer);
-        messageSender.execute(numPlayer + " movio " + editTextTest.getText().toString());
+        messageSender.execute(np + " marco " + editTextTest.getText().toString());
     }
 
 
